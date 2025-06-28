@@ -1,7 +1,11 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
+#include <GL/gl.h>
 
 #undef main // Prevents conflict with SDL_main.h
 
@@ -18,7 +22,7 @@ using namespace std;
 int main(int argc, char* args[]) {
 	Logger logger("logs.log");
 
-	if (SDL_Init(SDL_INIT_VIDEO) > 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) > 0) {
 		logger.log(logger.CRITICAL, "SDL_Init has failed. SDL_Error: ");
 		logger.log(logger.CRITICAL, SDL_GetError());
 	}
@@ -33,12 +37,17 @@ int main(int argc, char* args[]) {
 		logger.log(logger.CRITICAL, SDL_GetError());
 	}
 
+  if(!(Mix_Init(MIX_INIT_MP3))) {
+    logger.log(logger.CRITICAL, "MIX_Init has failed. SDL_Error: ");
+    logger.log(logger.CRITICAL, SDL_GetError());
+  }
+
 	logger.log(logger.INFO, "Creating window window");
-	RenderWindow window("Minijam 187", 800, 800);
+	RenderWindow window("SDL2 template", 800, 800);
 
 	logger.log(logger.DEBUG, window.getRefreshRate());
 
-	SDL_Texture* bgTexture = window.loadTexture("assets/gfx/background.png");
+	// SDL_Texture* bgTexture = window.loadTexture("assets/gfx/background.png");
 	// Entity entity(Vector2f(0, 0), bgTexture);
 	Text text("Text", Vector2f(100.0f, 100.0f), 50, 50, { 0, 0, 0, 0 }, window.getRenderer());
 
@@ -86,7 +95,10 @@ int main(int argc, char* args[]) {
 
 	logger.log(logger.INFO, "Cleaning up");
 	window.cleanUp();
-	
+
+  logger.log(logger.INFO, "Quiting Mix");
+  Mix_Quit();
+
 	logger.log(logger.INFO, "Quitting SDL");
 	SDL_Quit();
 

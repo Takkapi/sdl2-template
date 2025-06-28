@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "RenderWindow.hpp"
 #include "Logger.hpp"
 
@@ -10,7 +8,7 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 
 	Logger logger("logs.log");
 
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	if (window == NULL) {
 		logger.log(logger.CRITICAL, "Window failed to init. Error: ");
